@@ -1,0 +1,104 @@
+skip_tags: true
+clone_depth: 50
+
+matrix:
+    fast_finish: false
+
+environment:
+  global:
+    BUILD_COMMIT: "master"
+    PYPI_UPLOAD: "false"
+    TESTPYPI_UPLOAD: "false" # "true" or "false"
+    REPO_DIR: linearmodels
+    PACKAGE_NAME: linearmodels
+    BUILD_DEPENDS: "cython numpy scipy statsmodels pandas xarray property_cached mypy-extensions"
+    TEST_DEPENDS: "pytest jupyter jupyter_client nbformat nbconvert "
+  TESTPYPI_USERNAME:
+    secure: 9D67F9Bcy8PITwg1cezOgw==
+  TESTPYPI_PASSWORD:
+    secure: sEkgnJNTN/bQu3Lh8PysOA==
+  PYPI_USERNAME:
+    secure: 9D67F9Bcy8PITwg1cezOgw==
+  PYPI_PASSWORD:
+    secure: ufGrse+xSx3blI6bh9bnSg==
+
+  matrix:
+    - PYTHON: "C:\\Miniconda35"
+      PYTHON_VERSION: "3.5"
+      PYTHON_ARCH: "32"
+    - PYTHON: "C:\\Miniconda35-x64"
+      PYTHON_VERSION: "3.5"
+      PYTHON_ARCH: "64"
+    - PYTHON: "C:\\Miniconda36"
+      PYTHON_VERSION: "3.6"
+      PYTHON_ARCH: "32"
+    - PYTHON: "C:\\Miniconda36-x64"
+      PYTHON_VERSION: "3.6"
+      PYTHON_ARCH: "64"
+    - PYTHON: "C:\\Miniconda37"
+      PYTHON_VERSION: "3.7"
+      PYTHON_ARCH: "32"
+    - PYTHON: "C:\\Miniconda37-x64"
+      PYTHON_VERSION: "3.7"
+      PYTHON_ARCH: "64"
+
+
+# We always use a 64-bit machine, but can build x86 distributions
+# with the TARGET_ARCH variable.
+platform:
+    - x64
+
+install:
+    - git submodule update --init --recursive
+    # Install miniconda and fix headers
+    - SET PATH=%PYTHON%;%PYTHON%\Scripts;%PYTHON%\Library\bin;%PATH%
+    - conda config --set always_yes yes
+    - conda update conda
+    - conda clean --packages
+    - conda update --all
+    - conda info
+
+    # Check that we have the expected version and architecture for Python
+    - python -m pip install --upgrade pip
+    - python --version
+    - python -c "import struct; print(struct.calcsize('P') * 8)"
+
+    # clone a origsel/python-appveyor-demo
+    # this repo includes a simple package to test appveyor
+    - set "WHEELBUILDER_DIR=%cd%"
+    - cd linearmodels
+    - git fetch --all
+    - cd ..
+
+build_script:
+    # Install build requirements
+    - pip install %BUILD_DEPENDS%
+
+    # build wheel:
+    - cd %REPO_DIR%
+    - git checkout %BUILD_COMMIT%
+    - python setup.py bdist_wheel
+    - ls dist/*
+
+test_script:
+    # create test env
+    - conda create --yes -n test_env python=%PYTHON_VERSION%
+    - conda update -n base -c defaults conda
+    - activate test_env
+    - python -m pip install --upgrade pip
+    - pip install %BUILD_DEPENDS% %TEST_DEPENDS%
+
+    # install from wheel
+    - pip install --no-index --find-links dist/ %PACKAGE_NAME%
+
+    # run tests from install wheel
+    - mkdir _for_testing
+    - cd _for_testing
+    - python -c "import linearmodels; linearmodels.test('--skip-slow')"
+    - deactivate
+
+on_success:
+    - echo "Upload here"
+    - cd %WHEELBUILDER_DIR%\
+    - pip install twine
+    - call twine-upload.bat
