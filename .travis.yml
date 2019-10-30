@@ -1,5 +1,7 @@
 env:
     global:
+        - PYPI_UPLOAD=true  # true or false
+        - TESTPYPI_UPLOAD=true
         - REPO_DIR=linearmodels
         # Commit from your-project that you want to build
         - BUILD_COMMIT=master
@@ -81,3 +83,5 @@ script:
     - install_run $PLAT
 
 after_success:
+    # Upload wheels/sdist to PyPI
+    - source twine-upload.sh

@@ -6,9 +6,9 @@ matrix:
 
 environment:
   global:
-    BUILD_COMMIT: "master"
-    PYPI_UPLOAD: "false"
-    TESTPYPI_UPLOAD: "false" # "true" or "false"
+    BUILD_COMMIT: "4.14"
+    PYPI_UPLOAD: "true"
+    TESTPYPI_UPLOAD: "true" # "true" or "false"
     REPO_DIR: linearmodels
     PACKAGE_NAME: linearmodels
     BUILD_DEPENDS: "cython numpy scipy statsmodels pandas xarray property_cached mypy-extensions"
