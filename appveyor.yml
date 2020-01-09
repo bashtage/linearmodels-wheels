@@ -12,7 +12,7 @@ environment:
     REPO_DIR: linearmodels
     PACKAGE_NAME: linearmodels
     BUILD_DEPENDS: "cython numpy scipy statsmodels pandas xarray property_cached mypy-extensions"
-    TEST_DEPENDS: "pytest pytest-xdist<1.30 jupyter jupyter_client nbformat nbconvert"
+    TEST_DEPENDS: " pytest pytest-xdist<1.30 jupyter jupyter_client nbformat nbconvert"
   TESTPYPI_USERNAME:
     secure: 9D67F9Bcy8PITwg1cezOgw==
   TESTPYPI_PASSWORD:
@@ -86,6 +86,7 @@ test_script:
     - conda update -n base -c defaults conda
     - activate test_env
     - python -m pip install --upgrade pip
+    - echo pip install %BUILD_DEPENDS% %TEST_DEPENDS%
     - pip install %BUILD_DEPENDS% %TEST_DEPENDS%
 
     # install from wheel
