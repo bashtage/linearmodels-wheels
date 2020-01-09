@@ -6,13 +6,13 @@ matrix:
 
 environment:
   global:
-    BUILD_COMMIT: "4.14"
+    BUILD_COMMIT: "4.15"
     PYPI_UPLOAD: "true"
     TESTPYPI_UPLOAD: "true" # "true" or "false"
     REPO_DIR: linearmodels
     PACKAGE_NAME: linearmodels
     BUILD_DEPENDS: "cython numpy scipy statsmodels pandas xarray property_cached mypy-extensions"
-    TEST_DEPENDS: "pytest jupyter jupyter_client nbformat nbconvert "
+    TEST_DEPENDS: "pytest pytest-xdist<1.30 jupyter jupyter_client nbformat nbconvert"
   TESTPYPI_USERNAME:
     secure: 9D67F9Bcy8PITwg1cezOgw==
   TESTPYPI_PASSWORD:
@@ -23,12 +23,6 @@ environment:
     secure: ufGrse+xSx3blI6bh9bnSg==
 
   matrix:
-    - PYTHON: "C:\\Miniconda35"
-      PYTHON_VERSION: "3.5"
-      PYTHON_ARCH: "32"
-    - PYTHON: "C:\\Miniconda35-x64"
-      PYTHON_VERSION: "3.5"
-      PYTHON_ARCH: "64"
     - PYTHON: "C:\\Miniconda36"
       PYTHON_VERSION: "3.6"
       PYTHON_ARCH: "32"
@@ -40,6 +34,12 @@ environment:
       PYTHON_ARCH: "32"
     - PYTHON: "C:\\Miniconda37-x64"
       PYTHON_VERSION: "3.7"
+      PYTHON_ARCH: "64"
+    - PYTHON: "C:\\Miniconda38"
+      PYTHON_VERSION: "3.8"
+      PYTHON_ARCH: "32"
+    - PYTHON: "C:\\Miniconda38-x64"
+      PYTHON_VERSION: "3.8"
       PYTHON_ARCH: "64"
 
 
@@ -94,7 +94,7 @@ test_script:
     # run tests from install wheel
     - mkdir _for_testing
     - cd _for_testing
-    - python -c "import linearmodels; linearmodels.test('--skip-slow')"
+    - python -c "import linearmodels; linearmodels.test(['-n','auto','--skip-slow'])"
     - deactivate
 
 on_success:
