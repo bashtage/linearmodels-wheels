@@ -11,7 +11,9 @@ environment:
     TESTPYPI_UPLOAD: "true" # "true" or "false"
     REPO_DIR: linearmodels
     PACKAGE_NAME: linearmodels
-    BUILD_DEPENDS: "cython numpy scipy statsmodels pandas xarray property_cached mypy-extensions"
+    BUILD_DEPENDS: "cython numpy scipy pandas xarray property_cached mypy-extensions setuptools"
+    # Installed in a second wave
+    EXTRA_BUILD_DEPENDS: "statsmodels"
     TEST_DEPENDS: "cython numpy scipy statsmodels pandas xarray property_cached mypy-extensions pytest pytest-xdist jupyter jupyter_client nbformat nbconvert"
   TESTPYPI_USERNAME:
     secure: 9D67F9Bcy8PITwg1cezOgw==
@@ -23,24 +25,29 @@ environment:
     secure: ufGrse+xSx3blI6bh9bnSg==
 
   matrix:
-    - PYTHON: "C:\\Miniconda36"
-      PYTHON_VERSION: "3.6"
-      PYTHON_ARCH: "32"
-    - PYTHON: "C:\\Miniconda36-x64"
-      PYTHON_VERSION: "3.6"
-      PYTHON_ARCH: "64"
-    - PYTHON: "C:\\Miniconda37"
-      PYTHON_VERSION: "3.7"
-      PYTHON_ARCH: "32"
-    - PYTHON: "C:\\Miniconda37-x64"
-      PYTHON_VERSION: "3.7"
-      PYTHON_ARCH: "64"
-    - PYTHON: "C:\\Miniconda38"
-      PYTHON_VERSION: "3.8"
-      PYTHON_ARCH: "32"
-    - PYTHON: "C:\\Miniconda38-x64"
-      PYTHON_VERSION: "3.8"
-      PYTHON_ARCH: "64"
+    - PYTHON: C:\Python38-x64
+      PYTHON_VERSION: 3.8
+      PYTHON_ARCH: 64
+
+    - PYTHON: C:\Python37-x64
+      PYTHON_VERSION: 3.7
+      PYTHON_ARCH: 64
+
+    - PYTHON: C:\Python36-x64
+      PYTHON_VERSION: 3.6
+      PYTHON_ARCH: 64
+
+    - PYTHON: C:\Python38
+      PYTHON_VERSION: 3.8
+      PYTHON_ARCH: 32
+
+    - PYTHON: C:\Python37
+      PYTHON_VERSION: 3.7
+      PYTHON_ARCH: 32
+
+    - PYTHON: C:\Python36
+      PYTHON_VERSION: 3.6
+      PYTHON_ARCH: 32
 
 
 # We always use a 64-bit machine, but can build x86 distributions
@@ -50,41 +57,39 @@ platform:
 
 install:
     - git submodule update --init --recursive
-    # Install miniconda and fix headers
-    - SET PATH=%PYTHON%;%PYTHON%\Scripts;%PYTHON%\Library\bin;%PATH%
-    - conda config --set always_yes yes
-    - conda update conda
-    - conda clean --packages
-    - conda update --all
-    - conda info
+    - git fetch --all --tags
+
+    # Install new Python if necessary
+    - ps: .\multibuild\install_python.ps1
+
+    # Set path
+    - SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
 
     # Check that we have the expected version and architecture for Python
-    - python -m pip install --upgrade pip
     - python --version
+    - python -m pip install --upgrade pip wheel
     - python -c "import struct; print(struct.calcsize('P') * 8)"
 
     # clone a origsel/python-appveyor-demo
     # this repo includes a simple package to test appveyor
     - set "WHEELBUILDER_DIR=%cd%"
     - cd linearmodels
-    - git fetch --all
     - cd ..
 
 build_script:
     # Install build requirements
     - pip install %BUILD_DEPENDS%
+    - pip install %EXTRA_BUILD_DEPENDS%
 
     # build wheel:
     - cd %REPO_DIR%
     - git checkout %BUILD_COMMIT%
+    - python setup.py version
     - python setup.py bdist_wheel
     - ls dist/*
 
 test_script:
     # create test env
-    - conda create --yes -n test_env python=%PYTHON_VERSION%
-    - conda update -n base -c defaults conda
-    - activate test_env
     - python -m pip install --upgrade pip
     - pip install %TEST_DEPENDS%
 
