@@ -6,15 +6,13 @@ env:
         # Upload to PyPI directly
         - PYPI_UPLOAD=true  # true or false
         - TESTPYPI_UPLOAD=true
-      # pip dependencies to _build_ your project
-        - BUILD_DEPENDS="cython numpy xarray"
+        # pip dependencies to _build_ your project
+        - BUILD_DEPENDS="cython numpy scipy pandas statsmodels xarray"
         # pip dependencies to _test_ your project.  Include any dependencies
         # that you need, that are also specified in BUILD_DEPENDS, this will be
         # a separate install.
         - TEST_DEPENDS="numpy pandas scipy statsmodels patsy property_cached mypy_extensions pytest jupyter jupyter_client nbformat nbconvert pytest-xdist"
         - UNICODE_WIDTH=32
-        - WHEELHOUSE_UPLOADER_USERNAME=travis-worker
-        - MB_ML_VER=2010
         # Following generated with
         # travis encrypt -r your-org/your-project-wheels WHEELHOUSE_UPLOADER_SECRET=<the api key>
         # This is for Rackspace uploads.  Contact Matthew Brett, or the
