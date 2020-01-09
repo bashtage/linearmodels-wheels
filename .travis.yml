@@ -2,7 +2,7 @@ env:
     global:
         - REPO_DIR=linearmodels
         # Commit from your-project that you want to build
-        - BUILD_COMMIT=4.15.1
+        - BUILD_COMMIT=4.15.2
         # Upload to PyPI directly
         - PYPI_UPLOAD=true  # true or false
         - TESTPYPI_UPLOAD=true
