@@ -6,15 +6,15 @@ matrix:
 
 environment:
   global:
-    BUILD_COMMIT: "4.15.3"
-    PYPI_UPLOAD: "true"
-    TESTPYPI_UPLOAD: "true" # "true" or "false"
+    BUILD_COMMIT: "master"
+    PYPI_UPLOAD: "false"
+    TESTPYPI_UPLOAD: "false" # "true" or "false"
     REPO_DIR: linearmodels
     PACKAGE_NAME: linearmodels
     BUILD_DEPENDS: "cython numpy scipy pandas xarray property_cached mypy-extensions setuptools"
     # Installed in a second wave
     EXTRA_BUILD_DEPENDS: "statsmodels"
-    TEST_DEPENDS: "cython numpy scipy statsmodels pandas xarray property_cached mypy-extensions pytest pytest-xdist jupyter jupyter_client nbformat nbconvert"
+    TEST_DEPENDS: "cython numpy scipy statsmodels pandas xarray property_cached mypy-extensions pytest pytest-xdist"
   TESTPYPI_USERNAME:
     secure: 9D67F9Bcy8PITwg1cezOgw==
   TESTPYPI_PASSWORD:
@@ -25,6 +25,10 @@ environment:
     secure: ufGrse+xSx3blI6bh9bnSg==
 
   matrix:
+    - PYTHON: C:\Python38
+      PYTHON_VERSION: 3.8
+      PYTHON_ARCH: 32
+
     - PYTHON: C:\Python38-x64
       PYTHON_VERSION: 3.8
       PYTHON_ARCH: 64
@@ -36,10 +40,6 @@ environment:
     - PYTHON: C:\Python36-x64
       PYTHON_VERSION: 3.6
       PYTHON_ARCH: 64
-
-    - PYTHON: C:\Python38
-      PYTHON_VERSION: 3.8
-      PYTHON_ARCH: 32
 
     - PYTHON: C:\Python37
       PYTHON_VERSION: 3.7
@@ -84,7 +84,6 @@ build_script:
     # build wheel:
     - cd %REPO_DIR%
     - git checkout %BUILD_COMMIT%
-    - python setup.py version
     - python setup.py bdist_wheel
     - ls dist/*
 
@@ -99,8 +98,7 @@ test_script:
     # run tests from install wheel
     - mkdir _for_testing
     - cd _for_testing
-    - python -c "import linearmodels; linearmodels.test(['-n','auto','--skip-slow'])"
-    - deactivate
+    # - python -c "import linearmodels; linearmodels.test(['-n','auto','--skip-slow'])"
 
 on_success:
     - echo "Upload here"
