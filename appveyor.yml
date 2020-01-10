@@ -6,9 +6,9 @@ matrix:
 
 environment:
   global:
-    BUILD_COMMIT: "master"
-    PYPI_UPLOAD: "false"
-    TESTPYPI_UPLOAD: "false" # "true" or "false"
+    BUILD_COMMIT: "4.15.4"
+    PYPI_UPLOAD: "true"
+    TESTPYPI_UPLOAD: "true" # "true" or "false"
     REPO_DIR: linearmodels
     PACKAGE_NAME: linearmodels
     BUILD_DEPENDS: "cython numpy scipy pandas xarray property_cached mypy-extensions setuptools"
@@ -102,7 +102,7 @@ test_script:
     # run tests from install wheel
     - mkdir _for_testing
     - cd _for_testing
-    - python -c "import linearmodels; linearmodels.test(['-n 2','--skip-slow','--tb=long','--durations=25','--full-trace'])"
+    - python -c "import linearmodels; linearmodels.test(['-n 2','--skip-slow','--skip-smoke'])"
 
 on_success:
     - echo "Upload here"
