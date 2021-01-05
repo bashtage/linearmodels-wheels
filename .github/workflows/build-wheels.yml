@@ -25,9 +25,9 @@ jobs:
     env:
       REPO_DIR: linearmodels
       PKG_NAME: linearmodels
-      BUILD_COMMIT: 4.18
-      PYPI_UPLOAD: true  # true or false
-      TESTPYPI_UPLOAD: true
+      BUILD_COMMIT: master
+      PYPI_UPLOAD: false  # true or false
+      TESTPYPI_UPLOAD: false
       UNICODE_WIDTH: 32
       MB_PYTHON_VERSION: ${{ matrix.python-version }}
       TRAVIS_PYTHON_VERSION: ${{ matrix.python-version }}
