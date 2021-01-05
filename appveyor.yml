@@ -11,12 +11,10 @@ environment:
     TESTPYPI_UPLOAD: "true" # "true" or "false"
     REPO_DIR: linearmodels
     PACKAGE_NAME: linearmodels
-    BUILD_DEPENDS: "cython numpy scipy pandas xarray property_cached
-    mypy-extensions setuptools pyhdfe"
+    BUILD_DEPENDS: "cython numpy scipy pandas xarray property_cached mypy-extensions setuptools pyhdfe"
     # Installed in a second wave
     EXTRA_BUILD_DEPENDS: "statsmodels"
-    TEST_DEPENDS: "cython numpy scipy statsmodels pandas xarray property_cached
-    mypy-extensions pytest pytest-xdist pyhdfe"
+    TEST_DEPENDS: "cython numpy scipy statsmodels pandas xarray property_cached mypy-extensions pytest pytest-xdist pyhdfe"
     OMP_NUM_THREADS: 1
     MKL_NUM_THREADS: 1
     VML_NUM_THREADS: 1
