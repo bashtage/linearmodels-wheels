@@ -2,16 +2,18 @@ env:
     global:
         - REPO_DIR=linearmodels
         # Commit from your-project that you want to build
-        - BUILD_COMMIT=4.17
+        - BUILD_COMMIT=4.18
         # Upload to PyPI directly
         - PYPI_UPLOAD=true  # true or false
         - TESTPYPI_UPLOAD=true
         # pip dependencies to _build_ your project
-        - BUILD_DEPENDS="cython numpy scipy pandas statsmodels xarray"
+        - BUILD_DEPENDS="cython numpy scipy pandas statsmodels xarray pyhdfe"
         # pip dependencies to _test_ your project.  Include any dependencies
         # that you need, that are also specified in BUILD_DEPENDS, this will be
         # a separate install.
-        - TEST_DEPENDS="numpy pandas scipy statsmodels patsy property_cached mypy_extensions pytest jupyter jupyter_client nbformat nbconvert pytest-xdist"
+        - TEST_DEPENDS="numpy pandas scipy statsmodels patsy property_cached
+        mypy_extensions pytest jupyter jupyter_client nbformat nbconvert
+        pytest-xdist pyhdfe"
         - UNICODE_WIDTH=32
         # Following generated with
         # travis encrypt -r your-org/your-project-wheels WHEELHOUSE_UPLOADER_SECRET=<the api key>
@@ -48,13 +50,6 @@ matrix:
   include:
     - os: linux
       env:
-        - MB_PYTHON_VERSION=3.6
-    - os: linux
-      env:
-        - MB_PYTHON_VERSION=3.6
-        - PLAT=i686
-    - os: linux
-      env:
         - MB_PYTHON_VERSION=3.7
     - os: linux
       env:
@@ -67,15 +62,22 @@ matrix:
       env:
         - MB_PYTHON_VERSION=3.8
         - PLAT=i686
-    - os: osx
+    - os: linux
       env:
-        - MB_PYTHON_VERSION=3.6
+        - MB_PYTHON_VERSION=3.9
+    - os: linux
+      env:
+        - MB_PYTHON_VERSION=3.9
+        - PLAT=i686
     - os: osx
       env:
         - MB_PYTHON_VERSION=3.7
     - os: osx
       env:
         - MB_PYTHON_VERSION=3.8
+    - os: osx
+      env:
+        - MB_PYTHON_VERSION=3.9
 
 before_install:
     - source multibuild/common_utils.sh

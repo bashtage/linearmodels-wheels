@@ -6,15 +6,17 @@ matrix:
 
 environment:
   global:
-    BUILD_COMMIT: "4.17"
+    BUILD_COMMIT: "4.18"
     PYPI_UPLOAD: "true"
     TESTPYPI_UPLOAD: "true" # "true" or "false"
     REPO_DIR: linearmodels
     PACKAGE_NAME: linearmodels
-    BUILD_DEPENDS: "cython numpy scipy pandas xarray property_cached mypy-extensions setuptools"
+    BUILD_DEPENDS: "cython numpy scipy pandas xarray property_cached
+    mypy-extensions setuptools pyhdfe"
     # Installed in a second wave
     EXTRA_BUILD_DEPENDS: "statsmodels"
-    TEST_DEPENDS: "cython numpy scipy statsmodels pandas xarray property_cached mypy-extensions pytest pytest-xdist"
+    TEST_DEPENDS: "cython numpy scipy statsmodels pandas xarray property_cached
+    mypy-extensions pytest pytest-xdist pyhdfe"
     OMP_NUM_THREADS: 1
     MKL_NUM_THREADS: 1
     VML_NUM_THREADS: 1
@@ -29,6 +31,10 @@ environment:
     secure: ufGrse+xSx3blI6bh9bnSg==
 
   matrix:
+    - PYTHON: C:\Python39-x64
+      PYTHON_VERSION: 3.9
+      PYTHON_ARCH: 64
+
     - PYTHON: C:\Python38-x64
       PYTHON_VERSION: 3.8
       PYTHON_ARCH: 64
@@ -37,9 +43,9 @@ environment:
       PYTHON_VERSION: 3.7
       PYTHON_ARCH: 64
 
-    - PYTHON: C:\Python36-x64
-      PYTHON_VERSION: 3.6
-      PYTHON_ARCH: 64
+    - PYTHON: C:\Python39
+      PYTHON_VERSION: 3.9
+      PYTHON_ARCH: 32
 
     - PYTHON: C:\Python38
       PYTHON_VERSION: 3.8
@@ -47,10 +53,6 @@ environment:
 
     - PYTHON: C:\Python37
       PYTHON_VERSION: 3.7
-      PYTHON_ARCH: 32
-
-    - PYTHON: C:\Python36
-      PYTHON_VERSION: 3.6
       PYTHON_ARCH: 32
 
 
