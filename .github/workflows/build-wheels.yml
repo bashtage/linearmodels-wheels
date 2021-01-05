@@ -55,7 +55,15 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Pin Numpy, Scipy and Pandas version
       run: |
-        echo "NP_BUILD_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
+        if [[ $TRAVIS_PYTHON_VERSION == "3.7" ]]; then
+          echo "NP_BUILD_DEP=$(echo numpy==1.15.4)" >> $GITHUB_ENV;
+        fi
+        if [[ $TRAVIS_PYTHON_VERSION == "3.8" ]]; then
+          echo "NP_BUILD_DEP=$(echo numpy==1.17.5)" >> $GITHUB_ENV;
+        fi
+        if [[ $TRAVIS_PYTHON_VERSION == "3.9" ]]; then
+          echo "NP_BUILD_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
+        fi
         echo "NP_TEST_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
         echo "SP_BUILD_DEP=$(echo scipy==1.5.4)" >> $GITHUB_ENV;
         echo "SP_TEST_DEP=$(echo scipy==1.5.4)" >> $GITHUB_ENV;
