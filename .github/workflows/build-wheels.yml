@@ -27,7 +27,7 @@ jobs:
       PKG_NAME: linearmodels
       BUILD_COMMIT: 4.19
       PYPI_UPLOAD: true  # true or false
-      TESTPYPI_UPLOAD: true
+      TESTPYPI_UPLOAD: false
       UNICODE_WIDTH: 32
       MB_PYTHON_VERSION: ${{ matrix.python-version }}
       TRAVIS_PYTHON_VERSION: ${{ matrix.python-version }}
@@ -71,14 +71,14 @@ jobs:
     - name: Setup Environment variables
       run: |
         echo "Event type: ${{ github.event_name }}"
-        if [[ ${TESTPYPI_UPLOAD} == "true" ]] && [[ -z ${TESTPYPI_USERNAME} ]]; then
+        if [[ ${TESTPYPI_UPLOAD} == "true" ]]; then
           echo "Upload to Test PyPI"
           echo "UPLOAD_USERNAME=$TESTPYPI_USERNAME" >> $GITHUB_ENV
           echo "UPLOAD_PASSWORD=$TESTPYPI_PASSWORD" >> $GITHUB_ENV
           echo "PYPI_UPLOAD=false" >> $GITHUB_ENV
           echo "TESTPYPI_UPLOAD=true" >> $GITHUB_ENV
         fi
-        if [[ ${PYPI_UPLOAD} == "true" ]] && [[ -z ${PYPI_USERNAME} ]]; then
+        if [[ ${PYPI_UPLOAD} == "true" ]]; then
           echo "Upload to PyPI"
           echo "UPLOAD_USERNAME=$PYPI_USERNAME" >> $GITHUB_ENV
           echo "UPLOAD_PASSWORD=$PYPI_PASSWORD" >> $GITHUB_ENV
