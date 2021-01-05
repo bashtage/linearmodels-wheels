@@ -25,7 +25,7 @@ jobs:
     env:
       REPO_DIR: linearmodels
       PKG_NAME: linearmodels
-      BUILD_COMMIT: master
+      BUILD_COMMIT: 4.19
       PYPI_UPLOAD: false  # true or false
       TESTPYPI_UPLOAD: false
       UNICODE_WIDTH: 32
