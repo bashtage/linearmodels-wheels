@@ -2,9 +2,9 @@ name: Build wheels
 
 on:
   push:
-    branches: [ "4.18" ]
+    branches: [ master ]
   pull_request:
-    branches: [ "4.18" ]
+    branches: [ master ]
 
 jobs:
   build:
