@@ -10,13 +10,13 @@ if [[ ${TESTPYPI_UPLOAD} == true  || ${PYPI_UPLOAD} == true ]]; then
     echo ${TRAVIS_BUILD_DIR}/wheelhouse/
     ls ${TRAVIS_BUILD_DIR}/wheelhouse/
     if [[ ${TESTPYPI_UPLOAD} == true ]]; then
-          twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ -u $TESTPYPI_USERNAME -p $TESTPYPI_PASSWORD ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl
+          twine upload --skip-existing --repository-url https://test.pypi.org/legacy/ -u $UPLOAD_PASSWORD -p $UPLOAD_PASSWORD ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl
     else
         echo "Test PyPi upload is disabled"
     fi
     
     if [[ ${PYPI_UPLOAD} == true ]]; then
-        twine upload --skip-existing -u $PYPI_USERNAME -p $PYPI_PASSWORD ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl
+        twine upload --skip-existing -u $UPLOAD_USERNAME -p $UPLOAD_PASSWORD ${TRAVIS_BUILD_DIR}/wheelhouse/*.whl
     else
         echo "PyPi upload is disabled"
     fi
