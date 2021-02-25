@@ -60,7 +60,7 @@ jobs:
         if [[ $TRAVIS_PYTHON_VERSION == "3.9" ]]; then
           echo "NP_BUILD_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
         fi
-        echo "NP_TEST_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
+        echo "NP_TEST_DEP=$(echo numpy==1.19.5)" >> $GITHUB_ENV;
         echo "SP_BUILD_DEP=$(echo scipy==1.5.4)" >> $GITHUB_ENV;
         echo "SP_TEST_DEP=$(echo scipy==1.5.4)" >> $GITHUB_ENV;
         echo "PANDAS_DEP=$(echo pandas==1.1.5)" >> $GITHUB_ENV;
