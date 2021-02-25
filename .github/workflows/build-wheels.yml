@@ -2,9 +2,9 @@ name: Build wheels
 
 on:
   push:
-    branches: [ master ]
+    branches: [ main ]
   pull_request:
-    branches: [ master ]
+    branches: [ main ]
 
 jobs:
   build:
@@ -25,7 +25,7 @@ jobs:
     env:
       REPO_DIR: linearmodels
       PKG_NAME: linearmodels
-      BUILD_COMMIT: 4.19
+      BUILD_COMMIT: v4.20
       PYPI_UPLOAD: true  # true or false
       TESTPYPI_UPLOAD: false
       UNICODE_WIDTH: 32
