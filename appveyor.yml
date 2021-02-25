@@ -6,7 +6,7 @@ matrix:
 
 environment:
   global:
-    BUILD_COMMIT: "v4.20"
+    BUILD_COMMIT: "v4.21"
     PYPI_UPLOAD: "true"
     TESTPYPI_UPLOAD: "true" # "true" or "false"
     REPO_DIR: linearmodels
