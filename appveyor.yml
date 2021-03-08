@@ -6,8 +6,8 @@ matrix:
 
 environment:
   global:
-    BUILD_COMMIT: "main"
-    PYPI_UPLOAD: "false"
+    BUILD_COMMIT: "v4.22"
+    PYPI_UPLOAD: "true"
     TESTPYPI_UPLOAD: "false" # "true" or "false"
     REPO_DIR: linearmodels
     PACKAGE_NAME: linearmodels
