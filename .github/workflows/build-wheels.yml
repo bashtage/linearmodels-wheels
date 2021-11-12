@@ -15,7 +15,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.7, 3.8, 3.9, 3.10]
         os: [ubuntu-latest, macos-latest]
         platform: [x64]
         PLAT: [i686, x86_64]
@@ -25,8 +25,8 @@ jobs:
     env:
       REPO_DIR: linearmodels
       PKG_NAME: linearmodels
-      BUILD_COMMIT: "v4.24"
-      PYPI_UPLOAD: true # true or false
+      BUILD_COMMIT: "main"
+      PYPI_UPLOAD: false # true or false
       TESTPYPI_UPLOAD: false
       UNICODE_WIDTH: 32
       MB_PYTHON_VERSION: ${{ matrix.python-version }}
@@ -51,8 +51,16 @@ jobs:
         python-version: ${{ matrix.python-version }}
     - name: Pin Numpy, Scipy and Pandas version
       run: |
+        echo "NP_TEST_DEP=$(echo numpy==1.21.4)" >> $GITHUB_ENV;
+        echo "SP_BUILD_DEP=$(echo scipy==1.7.2)" >> $GITHUB_ENV;
+        echo "SP_TEST_DEP=$(echo scipy==1.7.2)" >> $GITHUB_ENV;
+        echo "PANDAS_DEP=$(echo pandas==1.3.4)" >> $GITHUB_ENV;
         if [[ $TRAVIS_PYTHON_VERSION == "3.7" ]]; then
           echo "NP_BUILD_DEP=$(echo numpy==1.15.4)" >> $GITHUB_ENV;
+          echo "NP_TEST_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
+          echo "SP_BUILD_DEP=$(echo scipy==1.5.4)" >> $GITHUB_ENV;
+          echo "SP_TEST_DEP=$(echo scipy==1.5.4)" >> $GITHUB_ENV;
+          echo "PANDAS_DEP=$(echo pandas==1.1.5)" >> $GITHUB_ENV;
         fi
         if [[ $TRAVIS_PYTHON_VERSION == "3.8" ]]; then
           echo "NP_BUILD_DEP=$(echo numpy==1.17.5)" >> $GITHUB_ENV;
@@ -60,10 +68,9 @@ jobs:
         if [[ $TRAVIS_PYTHON_VERSION == "3.9" ]]; then
           echo "NP_BUILD_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
         fi
-        echo "NP_TEST_DEP=$(echo numpy==1.19.4)" >> $GITHUB_ENV;
-        echo "SP_BUILD_DEP=$(echo scipy==1.5.4)" >> $GITHUB_ENV;
-        echo "SP_TEST_DEP=$(echo scipy==1.5.4)" >> $GITHUB_ENV;
-        echo "PANDAS_DEP=$(echo pandas==1.1.5)" >> $GITHUB_ENV;
+        if [[ $TRAVIS_PYTHON_VERSION == "3.10" ]]; then
+          echo "NP_BUILD_DEP=$(echo numpy==1.21.4)" >> $GITHUB_ENV;
+        fi
     - name: Setup Environment variables
       run: |
         echo "Event type: ${{ github.event_name }}"
@@ -133,4 +140,3 @@ jobs:
         TESTPYPI_PASSWORD: ${{ secrets.TESTPYPI_PASSWORD }}
         PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
         PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-

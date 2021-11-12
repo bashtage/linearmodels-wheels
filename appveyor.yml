@@ -7,7 +7,7 @@ matrix:
 environment:
   global:
     BUILD_COMMIT: "v4.24"
-    PYPI_UPLOAD: "true"
+    PYPI_UPLOAD: "false"
     TESTPYPI_UPLOAD: "false" # "true" or "false"
     REPO_DIR: linearmodels
     PACKAGE_NAME: linearmodels
@@ -30,6 +30,11 @@ environment:
     secure: ufGrse+xSx3blI6bh9bnSg==
 
   matrix:
+    - PYTHON: C:\Python310-x64
+      PYTHON_VERSION: 3.10
+      PYTHON_ARCH: 64
+      NP_BUILD_DEP: 1.21.4
+
     - PYTHON: C:\Python39-x64
       PYTHON_VERSION: 3.9
       PYTHON_ARCH: 64
