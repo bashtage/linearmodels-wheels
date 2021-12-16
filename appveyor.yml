@@ -11,10 +11,10 @@ environment:
     TESTPYPI_UPLOAD: "false" # "true" or "false"
     REPO_DIR: linearmodels
     PACKAGE_NAME: linearmodels
-    BUILD_DEPENDS: "cython scipy pandas xarray property_cached mypy-extensions setuptools pyhdfe"
+    BUILD_DEPENDS: "cython scipy pandas xarray property_cached mypy-extensions setuptools pyhdfe formulaic"
     # Installed in a second wave
     EXTRA_BUILD_DEPENDS: "statsmodels"
-    TEST_DEPENDS: "cython scipy statsmodels pandas xarray property_cached mypy-extensions pytest pytest-xdist pyhdfe"
+    TEST_DEPENDS: "cython scipy statsmodels pandas xarray property_cached mypy-extensions pytest pytest-xdist pyhdfe formulaic"
     OMP_NUM_THREADS: 1
     MKL_NUM_THREADS: 1
     VML_NUM_THREADS: 1
@@ -94,10 +94,10 @@ install:
 
 build_script:
     # Install build requirements
-    - echo pip install numpy==%NP_BUILD_DEP% %BUILD_DEPENDS%
-    - pip install numpy==%NP_BUILD_DEP% %BUILD_DEPENDS%
-    - echo pip install %EXTRA_BUILD_DEPENDS%
-    - pip install %EXTRA_BUILD_DEPENDS%
+    - echo python -m pip install numpy==%NP_BUILD_DEP% %BUILD_DEPENDS%
+    - python -m pip install numpy==%NP_BUILD_DEP% %BUILD_DEPENDS%
+    - echo python -m pip install %EXTRA_BUILD_DEPENDS%
+    - python -m pip install %EXTRA_BUILD_DEPENDS%
 
     # build wheel:
     - cd %REPO_DIR%
@@ -110,11 +110,11 @@ test_script:
     - python -m pip install --upgrade pip virtualenv
     - virtualenv test
     - .\test\Scripts\activate.bat
-    - echo pip install numpy==%NP_TEST_DEP% %TEST_DEPENDS%
-    - pip install numpy==%NP_TEST_DEP% %TEST_DEPENDS%
+    - echo python -m pip install numpy==%NP_TEST_DEP% %TEST_DEPENDS%
+    - python -m pip install numpy==%NP_TEST_DEP% %TEST_DEPENDS%
 
     # install from wheel
-    - pip install --no-index --find-links dist/ %PACKAGE_NAME%
+    - python -m pip install --no-index --find-links dist/ %PACKAGE_NAME%
 
     # run tests from install wheel
     - mkdir _for_testing
