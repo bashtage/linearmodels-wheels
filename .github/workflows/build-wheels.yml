@@ -22,6 +22,8 @@ jobs:
         exclude:
           - os: macos-latest # macos-10.15
             PLAT: i686
+          - python-version: "3.10" # No SciPy for i686 and 3.10
+            PLAT: i686
     env:
       REPO_DIR: linearmodels
       PKG_NAME: linearmodels
@@ -97,6 +99,10 @@ jobs:
         echo "BUILD_DEPENDS=$(echo $NP_BUILD_DEP $SP_BUILD_DEP $PANDAS_DEP cython statsmodels xarray pyhdfe)" >> $GITHUB_ENV;
         echo "TEST_DEPENDS=$(echo $NP_TEST_DEP $SP_TEST_DEP $PANDAS_DEP nose pytest pytest-xdist statsmodels patsy property_cached mypy_extensions pytest jupyter jupyter_client nbformat nbconvert==5.6.1 pytest-xdist pyhdfe)" >> $GITHUB_ENV;
         echo "DOCKER_TEST_IMAGE=$(echo multibuild/xenial_${{ matrix.PLAT}})" >> $GITHUB_ENV;
+        # focal for 3.10 only
+        if [[ ${{ matrix.python-version }} == "3.10" ]]; then
+          echo "DOCKER_TEST_IMAGE=$(echo multibuild/focal_${{ matrix.PLAT}})" >> $GITHUB_ENV;
+        fi
     - name: Print some Environment variable
       run: |
         echo "ANACONDA_ORG: ${ANACONDA_ORG}"
