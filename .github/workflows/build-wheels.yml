@@ -16,26 +16,28 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python: ["cp37", "cp38", "cp39", "cp310"]
+        python: ["cp38", "cp39", "cp310"]
         os: [ubuntu-20.04, windows-2019, macOS-10.15]
     env:
-      BUILD_COMMIT: "v4.25"  # main or a specific version, e.g., v4.25
-      PYPI_UPLOAD: true  # true or false
+      BUILD_COMMIT: "main"  # main or a specific version, e.g., v4.25
+      PYPI_UPLOAD: false  # true or false
       TESTPYPI_UPLOAD: false
       CIBW_BUILD: ${{ matrix.python }}-*
-      CIBW_ARCHS_LINUX: "x86_64"
+      CIBW_ARCHS_LINUX: "x86_64 aarch64"
       CIBW_ARCHS_MACOS: "x86_64 arm64"
       # No support for pypy, musl, Win32 for 3.10+
-      CIBW_SKIP: "pp* *-musllinux_x86_64 cp310-win32"
+      CIBW_SKIP: "pp* *-musllinux_* cp310-win32"
       CIBW_TEST_REQUIRES: pytest pytest-xdist
       CIBW_TEST_COMMAND: python -c "import linearmodels; linearmodels.test(['-n','2','--skip-slow'])"
+      # Avoid testing on emulated architectures
+      CIBW_TEST_SKIP: "*-*linux_{aarch64,ppc64le,s390x}"
       CIBW_REPAIR_WHEEL_COMMAND_LINUX: 'auditwheel repair --strip -w {dest_dir} {wheel}'
       MKL_NUM_THREADS: 1
       OMP_NUM_THREADS: 1
       OPENLAS_NUM_THREADS: 1
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
           fetch-depth: 0
@@ -45,14 +47,24 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Set up QEMU
+        if: runner.os == 'Linux'
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: all
+
       - name: Install cibuildwheel
         run: python -m pip install cibuildwheel==2.3.1
 
       - name: Build wheels
         run: |
+          pushd linearmodels
+          git remote -v
+          git checkout main
+          git pull origin main
+          popd
+          git submodule foreach git checkout ${{ env.BUILD_COMMIT }}
           python -m cibuildwheel --output-dir wheelhouse linearmodels
-        env:
-          CIBW_BEFORE_BUILD: 'git submodule foreach git checkout  ${{ env.BUILD_COMMIT }}'
 
       - name: Upload wheels
         if: always()
