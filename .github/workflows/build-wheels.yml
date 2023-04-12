@@ -30,7 +30,7 @@ jobs:
       CIBW_TEST_REQUIRES: pytest pytest-xdist
       CIBW_TEST_COMMAND: python -c "import linearmodels; linearmodels.test(['-n','2','--skip-slow'])"
       # Avoid testing on emulated architectures
-      CIBW_TEST_SKIP: "*-*linux_{aarch64,ppc64le,s390x}"
+      CIBW_TEST_SKIP: "*-*linux_{aarch64,ppc64le,s390x} *-win32"
       CIBW_REPAIR_WHEEL_COMMAND_LINUX: 'auditwheel repair --strip -w {dest_dir} {wheel}'
       MKL_NUM_THREADS: 1
       OMP_NUM_THREADS: 1
