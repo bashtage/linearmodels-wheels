@@ -19,7 +19,7 @@ jobs:
         python: ["cp38", "cp39", "cp310", "cp311"]
         os: [ubuntu-20.04, windows-2019, macOS-10.15]
     env:
-      BUILD_COMMIT: "v4.30"  # main or a specific version, e.g., v4.25
+      BUILD_COMMIT: "v4.31"  # main or a specific version, e.g., v4.25
       PYPI_UPLOAD: true  # true or false
       TESTPYPI_UPLOAD: false
       CIBW_BUILD: ${{ matrix.python }}-*
