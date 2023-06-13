@@ -70,7 +70,5 @@ jobs:
         if: always()
         run: source twine-upload.sh
         env:
-          TESTPYPI_USERNAME: ${{ secrets.TESTPYPI_USERNAME }}
-          TESTPYPI_PASSWORD: ${{ secrets.TESTPYPI_PASSWORD }}
-          PYPI_USERNAME: ${{ secrets.PYPI_USERNAME }}
-          PYPI_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+          TESTPYPI_TOKEN: ${{ secrets.TESTPYPI_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
