@@ -48,7 +48,7 @@ jobs:
         with:
           platforms: all
 
-      - name: Build wheels (Default)
+      - name: Build wheels
         uses: pypa/cibuildwheel@v2.21
         with:
           output-dir: wheelhouse
