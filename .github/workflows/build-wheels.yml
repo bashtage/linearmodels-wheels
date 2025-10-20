@@ -24,9 +24,9 @@ jobs:
       TESTPYPI_UPLOAD: false
       CIBW_BUILD: ${{ matrix.python }}-*
       CIBW_ARCHS_LINUX: "x86_64 aarch64"
-      CIBW_ARCHS_MACOS: "x86_64 arm64"
+      CIBW_ARCHS_MACOS: native
       # No support for pypy, musl, Win32 for 3.10+
-      CIBW_SKIP: "pp* *musllinux_aarch64* *-win32 cp39-musllinux*"
+      CIBW_SKIP: "pp* *musllinux_aarch64* *-win32"
       CIBW_TEST_REQUIRES: pytest==8.4.2 pytest-xdist xarray
       CIBW_TEST_COMMAND: python -c "import linearmodels; linearmodels.test(['-n','auto','--skip-slow'])"
       # Avoid testing on emulated architectures
