@@ -17,24 +17,24 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest, macos-15-intel]
-        python: [cp310, cp311, cp312, cp313, cp314]
+        python: [cp310, cp311, cp312, cp313, cp314, cp315]
     env:
-      BUILD_COMMIT: "v7.0"  # main or a specific version, e.g., "v6.1"
-      PYPI_UPLOAD: true  # true or false
+      BUILD_COMMIT: "main"  # main or a specific version, e.g., "v6.1"
+      PYPI_UPLOAD: false  # true or false
       TESTPYPI_UPLOAD: false
       CIBW_BUILD: ${{ matrix.python }}-*
       CIBW_ARCHS_LINUX: "x86_64 aarch64"
       CIBW_ARCHS_MACOS: native
       # No support for pypy, musl, Win32 for 3.10+
       CIBW_SKIP: "pp* *musllinux_aarch64* *-win32"
-      CIBW_TEST_REQUIRES: pytest==8.4.2 pytest-xdist xarray
+      CIBW_TEST_REQUIRES: pytest>=9,<10 pytest-xdist xarray
       CIBW_TEST_COMMAND: python -c "import linearmodels; linearmodels.test(['-n','auto','--skip-slow'])"
       # Avoid testing on emulated architectures
       CIBW_TEST_SKIP: "*-*linux_{aarch64,ppc64le,s390x} *-win32"
       CIBW_REPAIR_WHEEL_COMMAND_LINUX: 'auditwheel repair --strip -w {dest_dir} {wheel}'
       MKL_NUM_THREADS: 1
       OMP_NUM_THREADS: 1
-      OPENLAS_NUM_THREADS: 1
+      OPENBLAS_NUM_THREADS: 1
 
     steps:
       - uses: actions/checkout@v7
@@ -49,7 +49,7 @@ jobs:
           platforms: all
 
       - name: Build wheels
-        uses: pypa/cibuildwheel@v4.2
+        uses: pypa/cibuildwheel@v4.3.1
         with:
           output-dir: wheelhouse
           package-dir: linearmodels
