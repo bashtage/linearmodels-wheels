@@ -8,7 +8,7 @@ on:
 
 jobs:
   build_wheels:
-    name: ${{ matrix.os }}, Python ${{ matrix.python }}
+    name: ${{ matrix.os }}, Python ${{ matrix.python }}${{ matrix.variant == 'musllinux' && ', musllinux' || '' }}
     runs-on: ${{ matrix.os }}
     defaults:
       run:
@@ -16,8 +16,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest,  windows-11-arm, macos-latest, macos-15-intel]
+        # Every job builds a single wheel. Linux x86_64 has two wheels for each
+        # Python (manylinux and musllinux), so it has two jobs; the musllinux
+        # job is the one with variant musllinux. Linux aarch64 is built natively
+        # on an ARM runner. See CIBW_ARCHS_LINUX and CIBW_SKIP below.
+        os: [ubuntu-latest, ubuntu-24.04-arm, windows-latest,  windows-11-arm, macos-latest, macos-15-intel]
         python: [cp310, cp311, cp312, cp313, cp314, cp315]
+        variant: [default, musllinux]
         exclude:
           # statsmodels has win_arm64 wheels from Python 3.13, so the wheels for older
           # Pythons could not be tested
@@ -27,15 +32,31 @@ jobs:
             python: cp311
           - os: windows-11-arm
             python: cp312
+          # No musllinux wheels for aarch64 and no separate musllinux job
+          # outside of Linux x86_64
+          - os: ubuntu-24.04-arm
+            variant: musllinux
+          - os: windows-latest
+            variant: musllinux
+          - os: windows-11-arm
+            variant: musllinux
+          - os: macos-latest
+            variant: musllinux
+          - os: macos-15-intel
+            variant: musllinux
     env:
       BUILD_COMMIT: "v7.1"  # main or a specific version, e.g., "v6.1"
       PYPI_UPLOAD: true  # true or false
       TESTPYPI_UPLOAD: false
       CIBW_BUILD: ${{ matrix.python }}-*
-      CIBW_ARCHS_LINUX: "x86_64 aarch64"
+      # Build only for the architecture of the runner, so each job builds a
+      # single wheel and nothing runs under emulation
+      CIBW_ARCHS_LINUX: native
       CIBW_ARCHS_MACOS: native
-      # No support for pypy, musl, Win32 for 3.10+
-      CIBW_SKIP: "pp* *musllinux_aarch64* *-win32"
+      # No support for pypy or Win32 for 3.10+
+      # The musllinux variant builds only musllinux wheels, all other jobs
+      # build no musllinux wheel (so there is no musllinux aarch64 wheel)
+      CIBW_SKIP: "pp* *-win32 ${{ matrix.variant == 'musllinux' && '*manylinux*' || '*musllinux*' }}"
       CIBW_TEST_REQUIRES: pytest>=9,<10 pytest-xdist xarray
       CIBW_TEST_COMMAND: python -c "import linearmodels; linearmodels.test(['-n','auto','--skip-slow'])"
       # Avoid testing on emulated architectures
@@ -47,12 +68,6 @@ jobs:
         with:
           submodules: recursive
           fetch-depth: 0
-
-      - name: Set up QEMU
-        if: runner.os == 'Linux'
-        uses: docker/setup-qemu-action@v4
-        with:
-          platforms: all
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v4.3.5
