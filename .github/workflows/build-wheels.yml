@@ -45,8 +45,8 @@ jobs:
           - os: macos-15-intel
             variant: musllinux
     env:
-      BUILD_COMMIT: "v7.1"  # main or a specific version, e.g., "v6.1"
-      PYPI_UPLOAD: true  # true or false
+      BUILD_COMMIT: "main"  # main or a specific version, e.g., "v6.1"
+      PYPI_UPLOAD: false  # true or false
       TESTPYPI_UPLOAD: false
       CIBW_BUILD: ${{ matrix.python }}-*
       # Build only for the architecture of the runner, so each job builds a
